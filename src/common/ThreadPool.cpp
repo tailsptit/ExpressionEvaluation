@@ -25,7 +25,6 @@ size_t ThreadPool::getSize() const {
 }
 
 void ThreadPool::start() {
-    std::cout << "pQueueTasks.size() = " << pQueueTasks.size() << std::endl;
     {
         std::unique_lock<std::mutex> lock(queueMutex);
         state = RUNNING;
@@ -49,7 +48,6 @@ void ThreadPool::startWorker() {
             }
             task = (pQueueTasks.front()).release();
             pQueueTasks.pop();
-            std::cout << "pQueueTasks.pop()" << std::endl;
         }
         task->run();
     }
@@ -71,7 +69,6 @@ void ThreadPool::addTask(CallBack *task) {
             throw std::runtime_error("enqueue on stopped ThreadPool");
         }
         pQueueTasks.emplace(std::unique_ptr<CallBack>(task));
-        std::cout << "ThreadPool::addTask pQueueTasks.size() = " << pQueueTasks.size() << std::endl;
     }
     condition.notify_one();
 }

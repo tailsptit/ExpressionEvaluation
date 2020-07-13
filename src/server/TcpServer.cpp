@@ -119,24 +119,22 @@ void TcpServer::handleReading(int fd) {
             message->setState(Message::WRITING);
             delete len;
             delete[] writeData;
-
-            if ((nread == 0) || (errno != EAGAIN && errno != 0)) {
-                std::cout << "Close connection. Socket Id " << fd << std::endl;
-                removeSession(fd);
-                return;
-            }
+        }
+        if ((nread == 0) || (errno != EAGAIN && errno != 0)) {
+            std::cout << "Close connection. Socket Id " << fd << std::endl;
+            removeSession(fd);
+            return;
         }
     }
+
     // Submit new handler to event manager
     if (message->getState() == Message::INIT || message->getState() == Message::READING) {
         std::cout << "Re-Adding to Reading mode. Socket Id = " << fd << std::endl;
-        eventManger.modifyTaskWaitingStatus(fd, EPOLLIN | EPOLLONESHOT,
-                                            new CallBack(&TcpServer::handleReading, this, fd));
+        eventManger.modifyTaskWaitingStatus(fd, EPOLLIN | EPOLLONESHOT,new CallBack(&TcpServer::handleReading, this, fd));
     } else if (message->getState() == Message::WRITING) {
         std::cout << "Change to Writing mode. Socket = " << fd << std::endl;
         //eventManger.RemoveTaskWaitingReadable(fd);
-        eventManger.modifyTaskWaitingStatus(fd, EPOLLOUT | EPOLLONESHOT,
-                                            new CallBack(&TcpServer::handleWriting, this, fd));
+        eventManger.modifyTaskWaitingStatus(fd, EPOLLOUT | EPOLLONESHOT,new CallBack(&TcpServer::handleWriting, this, fd));
     }
 }
 
