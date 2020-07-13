@@ -62,4 +62,4 @@
     nc localhost 8081 < "/home/tails/Documents/Project/C++/test0.txt"
 
 ## Technical
-   N/A
+   - N/A
