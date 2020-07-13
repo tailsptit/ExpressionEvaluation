@@ -66,7 +66,6 @@ public:
         append(str.c_str(), str.length());
     }
 
-
     void append(const char *str, const int appendSize) {
         if (str == NULL) {
             return;

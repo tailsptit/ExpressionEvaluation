@@ -7,8 +7,9 @@
 #include <iostream>
 #include <limits>
 #include <values.h>
-#include <tgmath.h>
 #include <iomanip>
+#include <cfenv>
+#include <stdexcept>
 
 #include "../../include/Result.h"
 #include "../../include/Evaluation.h"
@@ -32,48 +33,35 @@ int Evaluation::getWeight(char op) {
 }
 
 Result Evaluation::applyOp(char op, double a, double b) {
-    long long lla = (long long) a, llb = (long long) b, llc;
+    std::feclearexcept(FE_OVERFLOW);
+    std::feclearexcept(FE_UNDERFLOW);
+    std::feclearexcept(FE_DIVBYZERO);
+    double c;
     Result result;
     switch (op) {
         case '+':
-            if (((b < 0) && (a < std::numeric_limits<double>::min() - b)) ||
-                ((b > 0) && (a > std::numeric_limits<double>::max() - b))) {
-                result.setException(true, "Overflow when ADDITION");
-            } else {
-                result.setValue(a + b);
-            };
+            c = a + b;
             break;
         case '-':
-            if (((b > 0) && (a < std::numeric_limits<double>::min() + b)) ||
-                ((b < 0) && (a > std::numeric_limits<double>::max() + b))) {
-                result.setException(true, "Overflow when SUBTRACTION");
-            } else {
-                result.setValue(a - b);
-            };
+            c = a - b;
             break;
         case '*':
-            llc = lla * llb;
-            if (lla != 0 && llc / lla != llb) {
-                result.setException(true, "Overflow when MULTIPLICATION");
-            } else {
-                result.setValue(a * b);
-            }
+            c = a * b;
             break;
         case '/':
-            if (fabs(b) < 1e-17){
-                result.setException(true, "Overflow when DIVISION. Division by zero");
-            } else if (fabs(b) < 1) {
-                double dabs = fabs(b);
-                double limit = DBL_MAX * dabs;
-                if ((a < -limit) || (a > limit)) {
-                    result.setException(true, "Overflow when DIVISION. INF");
-                } else {
-                    result.setValue(a / b);
-                }
-            } else {
-                result.setValue(a / b);
-            }
+            c = a / b;
             break;
+    }
+    if (std::fetestexcept(FE_DIVBYZERO)) {
+        std::string s;
+        s.append(1,op);
+        result.setException(true, "ERROR: Divide by zero");
+    } else if (std::fetestexcept(FE_OVERFLOW)) {
+        result.setException(true, std::string("ERROR: Overflow when executing operation ").append(1, op));
+    } else if (std::fetestexcept(FE_UNDERFLOW)) {
+        result.setException(true, std::string("ERROR: Underflow when executing operation ").append(1, op));
+    } else {
+        result.setValue(c);
     }
     return result;
 }
@@ -100,160 +88,87 @@ char *Evaluation::doubleToCharPointer(double d, int &len) {
     return stringToCharPointer(str, len);
 };
 
-/*
-  Infix to postfix conversion. Only +, -, *, / operators are expected.
-*/
-std::string Evaluation::postfixConversion(const std::string& exp) {
-    std::string postfix;
-    Stack<char> stack;     //stack to convert string from infix to postfix
-    // scan all characters one by one
-    for (int i = 0; i < exp.length(); ++i) {
-        char c = exp.at(i);
-        // if character is blank space then continue
-        if (isblank(c)) continue;
-
-        if (isdigit(c) || isalpha(c)){
-            postfix += c;
-            if ((i+1 < exp.length()) && (!isdigit(exp.at(i+1)))){
-                postfix += ' ';
-            }
-        }
-        // if the character is an '(' then push it to stack
-        else if (c == '('){
-            stack.push(c);
-        }
-        // if the character is an ')', pop and output from the stack util an '(' is encountered
-        else if (c == ')'){
-            while (!stack.empty() && stack.peek() != '(')
-                postfix += stack.pop();
-            if (!stack.empty() && stack.peek() != '(')
-                return "Invalid Expression";
-            else
-                stack.pop();
-        } else {
-            while (!stack.empty() && getWeight(c) <= getWeight(stack.peek())){
-                if (stack.peek() == '(')
-                    return "Invalid Expression";
-                postfix += stack.pop();
-            }
-            stack.push(c);
-        }
-    }
-    // pop all the operators from the stack
-    while (!stack.empty()) {
-        if (stack.peek() == '(')
-            return "Invalid Expression";
-        postfix += stack.pop();
-    }
-    return postfix;
+double stringToInteger(std::string s) {
+    return std::stoi(s);
 }
-//
-//// evaluatePostfix Postfix exp and return output
-Result Evaluation::evaluatePostfix(const std::string &exp) {
-    Stack<double> stack;
-    Result result;
-    // scan all characters one by one
-    for (int i = 0; i < exp.length(); i++) {
-        // if character is blank space then continue
-        if (exp[i] == ' ') continue;
-        else if (isOperator(exp[i])) {
-            // pop two operands from stack.
-            double operand2 = stack.peek(); stack.pop();
-            double operand1 = stack.peek(); stack.pop();
 
-            double val2 = stack.pop();
-            double val1 = stack.pop();
-            result = applyOp(exp[i], val1, val2);
+Result Evaluation::executeToken(char op, bool isOperand, std::string &operand) {
+//    if (isOperand){
+//        ss += operand;
+//    } else {
+//        ss += op;
+//    }
+//    std::cout << "expression = " << ss << std::endl;
+    Result result;
+//    static int dem = 0;
+    if (op == '(') {
+        ops.push(op);
+    } else if (isOperand) {
+        int val;
+        try {
+            val = std::stoi(operand);
+        } catch (std::exception &e) {
+            result.setException(true, "ERROR: Number is overflow " + operand);
+            return result;
+        }
+        values.push((double) val);
+    } else if (op == ')') {
+        while (!ops.empty() && ops.peek() != '(') {
+            if (values.getSize() < 2) {
+                result.setException(true, "ERROR: Wrong expression");
+                return result;
+            }
+            double val2 = values.pop();
+            double val1 = values.pop();
+            result = applyOp(ops.pop(), val1, val2);
             if (result.isException())
                 return result;
-            stack.push(result.getValue());
-        } else if (isdigit(exp[i])) {
-            // Extract the operand from the string, keep incrementing i as long as getting a digit
-            double digit = 0.0;
-            while (i < exp.length() && isdigit(exp[i])) {
-                // For a number with more than one digits, as we are scanning from left to right
-                if (digit > ((DBL_MAX) / 10.0)){
-                    result.setException(true, "Number isEx");
-                    return result;
-                } else {
-                    digit = (digit * 10.0) + (exp[i] - '0');
-                }
-                i++;
-            }
-            // when of while loop with i set to a non-numeric character or end of string
-            // decrement i because it will be incremented in increment section of loop once again.
-            i--;
-            stack.push(digit);
+            values.push(result.getValue());
         }
+        if (!ops.empty())
+            ops.pop();
+    } else if (isOperator(op)) {
+//        dem++;
+//        std::cout << "dem = " << dem << ", op = " << op << std::endl;
+//        std::cout << "getWeight(ops.getSize()) = " << getWeight(ops.getSize()) << ", getWeight(op) = " << getWeight(op) << std::endl;
+        while (!ops.empty() && getWeight(ops.peek()) >= getWeight(op)) {
+            if (values.getSize() < 2) {
+                result.setException(true, "ERROR: Wrong expression");
+                return result;
+            }
+            double val2 = values.pop();
+            double val1 = values.pop();
+            result = applyOp(ops.pop(), val1, val2);
+            if (result.isException())
+                return result;
+            values.push(result.getValue());
+        }
+        ops.push(op);
     }
-    result.setValue(stack.pop());
     return result;
 }
 
-Result Evaluation::evaluate(const std::string &exp) {
-    std::cout << std::setprecision(17);
-    Stack<double> values;
-    Stack<char> ops;
-    int i;
-    Result result;
-    // scan all characters one by one
-    for (i = 0; i < exp.length(); i++) {
-        // if character is blank space then continue
-        if (isblank(exp[i])) continue;
-        if (exp[i] == '(') {
-            ops.push(exp[i]);
-        } else if (isdigit(exp[i])) {
-            double digit = 0.0;
-            while (i < exp.length() && isdigit(exp[i])) {
-                if (digit > ((DBL_MAX) / 10.0)){
-                    result.setException(true, "Number isEx");
-                    return result;
-                } else {
-                    digit = (digit * 10.0) + (exp[i] - '0');
-                }
-                i++;
-            }
-            i--;
-            values.push(digit);
-//            92233720319999999
-        }
-            // if the character is an ')', pop and output from the stack util an '(' is encountered
-        else if (exp[i] == ')') {
-            while (!ops.empty() && ops.peek() != '(') {
-                double val2 = values.pop();
-                double val1 = values.pop();
-                result = applyOp(ops.pop(), val1, val2);
-                if (result.isException())
-                    return result;
-                values.push(result.getValue());
-            }
-            // pop opening brace.
-            if (!ops.empty())
-                ops.pop();
-        }
-            // character is an operator
-        else if (isOperator(exp[i])) {
-            while (!ops.empty() && getWeight(ops.peek()) >= getWeight(exp[i])) {
-                double val2 = values.pop();
-                double val1 = values.pop();
-                result = applyOp(ops.pop(), val1, val2);
-                if (result.isException())
-                    return result;
-                values.push(result.getValue());
-            }
-            // put current value to ops
-            ops.push(exp[i]);
-        }
-    }
-    // pop all the operators from the stack
+char *Evaluation::getValue(bool isError, std::string &error, int *len) {
+    if (isError)
+        return stringToCharPointer(error, *len);
+//    std::cout << "getValue  => ops.getSize() = " << ops.getSize() << std::endl;
+//    std::cout << "getValue  => values.getSize() = " << values.getSize() << std::endl;
+
     while (!ops.empty()) {
-        double val2 = values.pop();
-        double val1 = values.pop();
-        result = applyOp(ops.pop(), val1, val2);
-        if (result.isException())
-            return result;
-        values.push(result.getValue());
+        if (values.getSize() < 2) {
+            return stringToCharPointer("ERROR: Wrong expression", *len);
+        } else {
+            double val2 = values.pop();
+            double val1 = values.pop();
+            Result result = applyOp(ops.pop(), val1, val2);
+            if (result.isException()) {
+                return stringToCharPointer("ERROR: Wrong expression", *len);
+            }
+            values.push(result.getValue());
+        }
     }
-    result.setValue(values.pop());
-    return result;
+    if (values.getSize() != 1) {
+        return stringToCharPointer("ERROR: Wrong expression", *len);
+    }
+    return doubleToCharPointer(values.pop(), *len);
 }

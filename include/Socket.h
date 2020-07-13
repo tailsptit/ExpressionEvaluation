@@ -13,13 +13,8 @@
 
 class Socket : public FileDescriptor {
 public:
-    // construct server port
     Socket() = default;
-
-    // construct client port
     Socket(const std::string _hostname) : FileDescriptor(-1, true), hostname(_hostname) {}
-
-    // construct from fd
     Socket(const int fd, bool _autoClose = true) : FileDescriptor(fd, _autoClose) {}
 
     virtual ~Socket() {}

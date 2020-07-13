@@ -18,12 +18,11 @@ int main(int argc, char **argv) {
     Opt opt(argc, argv);
     if (opt.genData) {
         std::cout << "Generating data" << std::endl;
-        DataFactory factory;
         if (opt.file.empty()){
-            std::string result = factory.generate(opt.numExpressions, opt.numOperands, opt.maxOperand, opt.minOperand, opt.allowBracket, opt.ops);
+            std::string result = DataFactory::generate(opt.numExpressions, opt.numOperands, opt.maxOperand, opt.minOperand, opt.allowBracket, opt.ops);
             std::cout << "GEN EXPRESSION\n" << result << std::endl;
         } else {
-            factory.generate(opt.file, opt.numExpressions, opt.numOperands, opt.maxOperand, opt.minOperand, opt.allowBracket, opt.ops);
+            DataFactory::generate(opt.file, opt.numExpressions, opt.numOperands, opt.maxOperand, opt.minOperand, opt.allowBracket, opt.ops);
         }
     } else  {
         std::cout << "Start server" << std::endl;

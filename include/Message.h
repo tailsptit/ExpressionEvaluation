@@ -2,19 +2,20 @@
 // Created by tails on 12/07/2020.
 //
 
-#ifndef EXPRESSIONEVALUATION_WRITEDATA_H
-#define EXPRESSIONEVALUATION_WRITEDATA_H
+#ifndef EXPRESSIONEVALUATION_MESSAGE_H
+#define EXPRESSIONEVALUATION_MESSAGE_H
 
 #include <string.h>
-#include <FSM.h>
 
-class WriteData {
+class Message {
 public:
-    WriteData() = default;
-    WriteData(int _bufferSize) : bufferSize(_bufferSize) {
+    enum State {INIT, READING, WRITING, ERROR};
+
+    Message() = default;
+    Message(int _bufferSize) : bufferSize(_bufferSize) {
         buffer = new char[bufferSize];
     }
-    ~WriteData() {
+    ~Message() {
         if (buffer) {
             delete[] buffer;
         }
@@ -55,4 +56,4 @@ private:
     State state = INIT;
 };
 
-#endif //EXPRESSIONEVALUATION_WRITEDATA_H
+#endif //EXPRESSIONEVALUATION_MESSAGE_H

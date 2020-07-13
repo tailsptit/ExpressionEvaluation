@@ -11,8 +11,7 @@ add_executable(ExpressionEvaluation
         src/common/ThreadPool.cpp
         src/common/EventManager.cpp
         src/common/FileDescriptor.cpp
-        src/math/Evaluation.cpp
         src/math/Expression.cpp
         src/server/TcpServer.cpp
         src/factory/DataFactory.cpp
-        mainServer.cpp include/Result.h src/math/Evaluation2.cpp include/Evaluation2.h include/FSM.h)
+        mainServer.cpp include/Result.h src/math/Evaluation.cpp include/Evaluation.h)

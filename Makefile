@@ -312,33 +312,6 @@ src/math/Evaluation.cpp.s:
 	$(MAKE) -f CMakeFiles/ExpressionEvaluation.dir/build.make CMakeFiles/ExpressionEvaluation.dir/src/math/Evaluation.cpp.s
 .PHONY : src/math/Evaluation.cpp.s
 
-src/math/Evaluation2.o: src/math/Evaluation2.cpp.o
-
-.PHONY : src/math/Evaluation2.o
-
-# target to build an object file
-src/math/Evaluation2.cpp.o:
-	$(MAKE) -f CMakeFiles/ExpressionEvaluation.dir/build.make CMakeFiles/ExpressionEvaluation.dir/src/math/Evaluation2.cpp.o
-.PHONY : src/math/Evaluation2.cpp.o
-
-src/math/Evaluation2.i: src/math/Evaluation2.cpp.i
-
-.PHONY : src/math/Evaluation2.i
-
-# target to preprocess a source file
-src/math/Evaluation2.cpp.i:
-	$(MAKE) -f CMakeFiles/ExpressionEvaluation.dir/build.make CMakeFiles/ExpressionEvaluation.dir/src/math/Evaluation2.cpp.i
-.PHONY : src/math/Evaluation2.cpp.i
-
-src/math/Evaluation2.s: src/math/Evaluation2.cpp.s
-
-.PHONY : src/math/Evaluation2.s
-
-# target to generate assembly for a file
-src/math/Evaluation2.cpp.s:
-	$(MAKE) -f CMakeFiles/ExpressionEvaluation.dir/build.make CMakeFiles/ExpressionEvaluation.dir/src/math/Evaluation2.cpp.s
-.PHONY : src/math/Evaluation2.cpp.s
-
 src/math/Expression.o: src/math/Expression.cpp.o
 
 .PHONY : src/math/Expression.o
@@ -423,9 +396,6 @@ help:
 	@echo "... src/math/Evaluation.o"
 	@echo "... src/math/Evaluation.i"
 	@echo "... src/math/Evaluation.s"
-	@echo "... src/math/Evaluation2.o"
-	@echo "... src/math/Evaluation2.i"
-	@echo "... src/math/Evaluation2.s"
 	@echo "... src/math/Expression.o"
 	@echo "... src/math/Expression.i"
 	@echo "... src/math/Expression.s"

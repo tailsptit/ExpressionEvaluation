@@ -1,7 +1,4 @@
 //
-// Created by tails on 08/07/2020.
-//
-//
 // Created by tails on 12/07/2020.
 //
 

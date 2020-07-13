@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include "Socket.h"
-#include "WriteData.h"
+#include "Message.h"
 #include "EventManager.h"
 
 class TcpServer {
@@ -21,15 +21,14 @@ public:
 
 private:
     void handleTcpConnection();
-    void handleReadRequest(int fd);
-    void handleReadRequest2(int fd);
-    void handleWriteRequest(int fd);
+    void handleReading(int fd);
+    void handleWriting(int fd);
     void removeSession(int fd);
 
 private:
     std::shared_ptr<Socket> listenSocket;
     EventManager eventManger;
-    std::map<int, WriteData *> mapMessages;
+    std::map<int, Message *> mapMessages;
     std::mutex mtx;
 };
 
