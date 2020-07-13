@@ -12,7 +12,7 @@
 - cmake 3.16.3
 - make 4.2.1
 
-## Build
+## Build project
 #### Get source code
     git clone https://github.com/tailsptit/EvaluationEvaluation.git
 #### Build project
@@ -20,7 +20,7 @@
     cmake .
     make
 
-#### Run
+#### Run project
 ###### From EvaluationEvaluation project path, run command
     ./EvaluationEvaluation -port PORT -pool-size SIZE
             
