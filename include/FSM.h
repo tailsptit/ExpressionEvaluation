@@ -1,0 +1,10 @@
+//
+// Created by tails on 13/07/2020.
+//
+
+#ifndef EXPRESSIONEVALUATION_FSM_H
+#define EXPRESSIONEVALUATION_FSM_H
+
+enum State {INIT, READING, WRITING, ERROR};
+
+#endif //EXPRESSIONEVALUATION_FSM_H
