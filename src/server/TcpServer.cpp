@@ -50,7 +50,7 @@ void TcpServer::handleTcpConnection() {
 }
 
 void TcpServer::handleReading(int fd) {
-    std::cout << "Reading data from client nhe" << std::endl;
+    std::cout << "Reading data from client" << std::endl;
     Message *message = nullptr;
     {
         std::unique_lock<std::mutex> lock(mtx);

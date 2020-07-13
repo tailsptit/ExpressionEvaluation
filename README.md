@@ -14,24 +14,24 @@
 
 ## Build project
 #### Get source code
-    git clone https://github.com/tailsptit/EvaluationEvaluation.git
+    git clone https://github.com/tailsptit/ExpressionEvaluation.git
 #### Build project
-##### Open terminal, go to EvaluationEvaluation path, execute commands
+##### Open terminal, go to ExpressionEvaluation path, execute commands
     cmake .
     make
 
 #### Run project
-###### From EvaluationEvaluation project path, run command
-    ./EvaluationEvaluation -port PORT -pool-size SIZE
+###### From ExpressionEvaluation project path, run command
+    ./ExpressionEvaluation -port PORT -pool-size SIZE
             
             -port: server tcp port. Default PORT = 8081
             -pool-size: number of threads. Default SIZE = 7       
 ###### Example
-    ./EvaluationEvaluation -port 8081 -pool-size 5
+    ./ExpressionEvaluation -port 8081 -pool-size 5
     
 #### Generate data
-###### From EvaluationEvaluation project path, run command
-    ./EvaluationEvaluation -gen-data GEN -num-expression NUM_EXPS -num-operand NUM_OPS -min-operand MIN_OPS -max-operand MAX_OPS -allow-bracket BRACKET -operator OPS -file FILE  
+###### From ExpressionEvaluation project path, run command
+    ./ExpressionEvaluation -gen-data GEN -num-expression NUM_EXPS -num-operand NUM_OPS -min-operand MIN_OPS -max-operand MAX_OPS -allow-bracket BRACKET -operator OPS -file FILE  
         
     Parameter is optional
         -gen-data: generating data. Default GEN=true
@@ -43,8 +43,8 @@
         -operator: allow operators in expression, it is subset of [+, -, x, /]. Default OPS = +-x/
         -file: absolute filename
 ###### Example
-    ./EvaluationEvaluation -gen-data true -num-expression 1 -num-operand 20 -min-operand 0 -max-operand 2000 -allow-bracket true -operator +-
-    ./EvaluationEvaluation -gen-data true -num-expression 1 -num-operand 20 -min-operand 0 -max-operand 2000 -allow-bracket true -operator +-x/ -file "/home/tails/Documents/Project/C++/test0.txt"  
+    ./ExpressionEvaluation -gen-data true -num-expression 1 -num-operand 20 -min-operand 0 -max-operand 2000 -allow-bracket true -operator +-
+    ./ExpressionEvaluation -gen-data true -num-expression 1 -num-operand 20 -min-operand 0 -max-operand 2000 -allow-bracket true -operator +-x/ -file "/home/tails/Documents/Project/C++/test0.txt"  
 
 #### Client using netcat tool
 ###### Send data by typing, run command
@@ -62,5 +62,5 @@
     nc localhost 8081 < "/home/tails/Documents/Project/C++/test0.txt"
 
 ## Technical
-N/A
+    N/A
     
