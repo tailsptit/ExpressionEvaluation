@@ -1,5 +1,4 @@
 # EvaluationEvaluation
-
 ## Introduction
 - Program is designed for evaluating value of an expression, using client-server model.
 - Client sends a string expression to server using TCP protocol (such as netcat). 
