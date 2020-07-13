@@ -62,38 +62,5 @@
     nc localhost 8081 < "/home/tails/Documents/Project/C++/test0.txt"
 
 ## Technical
-#### ThreadPool
-##### Create a thread pool:
-    ThreadPool threadPool(size);
-
-##### Submit a task to the thread pool
-    pool.addTask(new CallBack(func, args...));
-
-##### Stop the thread pool
-    pool.stop();
-    pool.awaitTermination();
-
-#### EventManager
-    EventManager is an IO event-driven thread pool, support non-blocking IO 
-    The difference with ThreadPool is that it listens to IO descriptors with epolling in a seperate thread. 
-    The epolling thread would submit IO-ready tasks to its internal ThreadPool. 
-
-##### Create an EventManager:
-    EventManager eventManager(threadPoolSize);
-
-##### Submit a task without IO monitoring same as a regular FixedThreadPool:
-    eventManager.addTask(new CallBack(func, args...));
-
-##### Submit a task waiting for IO to be readable:
-    eventManager.addTaskWaitingReadable(fd, new CallBack(&func, args...);
-
-##### Submit a task waiting for IO to be writable:
-    eventManager.addTaskWaitingWritable(fd, new CallBack(&func, args...);
-
-##### Remove a awaiting task from event manager:
-    eventManager.removeAwaitingTask(fd);
-
-#### TCP Server
-    An TCP server using EventManager for multi-task handling. 
-    Server is non-block socket and use state machine to maintain status of each connection
+N/A
     

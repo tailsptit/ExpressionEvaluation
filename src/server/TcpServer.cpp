@@ -162,7 +162,6 @@ void TcpServer::handleWriting(int fd) {
 }
 
 void TcpServer::removeSession(int fd) {
-    // Remove fd from Epoll.
     eventManger.removeAwaitingTask(fd);
     close(fd);
     // Delete socket fd from map

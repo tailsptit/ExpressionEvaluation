@@ -35,14 +35,8 @@ public:
 
 private:
     void startWorker();
-
-    // need to keep track of threads so we can join them
     std::vector<std::thread> workers;
-
-    // the task queue
     std::queue<std::unique_ptr<CallBack>> pQueueTasks;
-
-    // synchronization
     std::mutex workerMutex;
     std::mutex queueMutex;
     std::condition_variable condition;
