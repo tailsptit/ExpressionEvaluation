@@ -9,7 +9,7 @@
 
 class Result {
 public:
-    Result() { isEx = false; value = 0;};
+    Result() { isEx = false; exceptionContent = "", value = 0.0;};
 
     bool isException() { return isEx; }
     void setException(bool _isEx, std::string _exceptionContent) {
@@ -23,7 +23,7 @@ public:
 private:
     bool isEx = false;
     std::string exceptionContent = "";
-    double value = 0;
+    double value = 0.0;
 };
 
 #endif //EXPRESSIONEVALUATION_RESULT_H

@@ -14,4 +14,4 @@ add_executable(ExpressionEvaluation
         src/math/Expression.cpp
         src/server/TcpServer.cpp
         src/factory/DataFactory.cpp
-        mainServer.cpp include/Result.h src/math/Evaluation.cpp include/Evaluation.h)
+        mainServer.cpp include/Result.h src/math/Evaluation.cpp include/Evaluation.h src/math/Evaluation2.cpp include/Evaluation2.h include/Stack.h)

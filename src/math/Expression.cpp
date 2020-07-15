@@ -61,7 +61,7 @@ void Expression::generate(const std::string& file, int numExpression) {
             int number = nextInt();
 
             // Generates random operator and append
-            char op = ops[nextInt() % 4];
+            char op = ops[nextIntOperator() % 4];
             if (op == 'x') {
                 op = '*';
             }
@@ -95,9 +95,14 @@ void Expression::generate(const std::string& file, int numExpression) {
 }
 
 int Expression::nextInt() {
-    return rnd(gen);
+    return rndOperand(gen);
 }
 
+int Expression::nextIntOperator(){
+    return rndOperator(gen);
+}
+
+
 bool Expression::nextBool() {
-    return rnd(gen) % 2 == 1;
+    return rndOperand(gen) % 2 == 1;
 }

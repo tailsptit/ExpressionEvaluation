@@ -3,8 +3,6 @@
 #include "../../include/ThreadPool.h"
 
 ThreadPool::ThreadPool() : state(IDLE), poolSize(4) {}
-
-// Constructor does nothing. Threads are created when new task submitted.
 ThreadPool::ThreadPool(size_t _poolSize) : state(IDLE), poolSize(_poolSize) {}
 
 // Destructor joins all threads
@@ -53,16 +51,14 @@ void ThreadPool::startWorker() {
     }
 }
 
-// Add new work item to the pool
+// Add new work to pool
 void ThreadPool::addTask(CallBack *task) {
     {
         std::unique_lock<std::mutex> lock(workerMutex);
         if (state == RUNNING && workers.size() < poolSize) {
-            std::cout << "ThreadPool::addTask => work item to the pool" << std::endl;
             workers.emplace_back(std::thread(&ThreadPool::startWorker, this));
         }
     }
-
     {
         std::unique_lock<std::mutex> lock(queueMutex);
         if (state == STOP) {
@@ -73,7 +69,7 @@ void ThreadPool::addTask(CallBack *task) {
     condition.notify_one();
 }
 
-// Blocks and wait for all previously submitted pQueueTasks to be completed.
+// Blocks and wait for all previously submitted pQueueTasks to be completed
 void ThreadPool::awaitTermination() {
     condition.notify_all();
     for (std::thread &worker: workers) {
@@ -83,8 +79,7 @@ void ThreadPool::awaitTermination() {
     }
 }
 
-// Shut down the ThreadPool. This method does not wait for previously submitted
-// pQueueTasks to be completed.
+// Shut down the ThreadPool. This method does not wait for previously submitted pQueueTasks to be completed.
 void ThreadPool::stop() {
     {
         std::unique_lock<std::mutex> lock(queueMutex);

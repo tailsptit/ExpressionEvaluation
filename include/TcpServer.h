@@ -13,6 +13,7 @@
 #include "Socket.h"
 #include "Message.h"
 #include "EventManager.h"
+#include "Evaluation4.h"
 
 class TcpServer {
 public:

@@ -21,13 +21,16 @@ public:
             ops[o] = _ops[o];
         }
         gen = std::mt19937(rd());
-        rnd = std::uniform_int_distribution<>(minOperand, maxOperand);
+        rndOperand = std::uniform_int_distribution<>(minOperand, maxOperand);
+        rndOperator = std::uniform_int_distribution<>(0, 10);
     }
 
     std::string generate(int numExpression);
     void generate(const std::string& file, int numExpression);
     int nextInt();
+    int nextIntOperator();
     bool nextBool();
+
 
 private:
     int numOperands = 10;
@@ -37,7 +40,9 @@ private:
     char ops[4] = {'+', '-', '*', '/'};
     std::random_device rd;
     std::mt19937 gen;
-    std::uniform_int_distribution<int> rnd;
+    std::uniform_int_distribution<int> rndOperand;
+    std::uniform_int_distribution<int> rndOperator;
+
 };
 
 

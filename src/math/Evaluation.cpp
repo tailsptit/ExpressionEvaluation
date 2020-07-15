@@ -104,6 +104,7 @@ Result Evaluation::executeToken(char op, bool isOperand, std::string &operand) {
     if (op == '(') {
         ops.push(op);
     } else if (isOperand) {
+        std::cout << "operand = " << ss << std::endl;
         int val;
         try {
             val = std::stoi(operand);
@@ -114,7 +115,7 @@ Result Evaluation::executeToken(char op, bool isOperand, std::string &operand) {
         values.push((double) val);
     } else if (op == ')') {
         while (!ops.empty() && ops.peek() != '(') {
-            if (values.getSize() < 2) {
+            if (values.size() < 2) {
                 result.setException(true, "ERROR: Wrong expression");
                 return result;
             }
@@ -130,9 +131,9 @@ Result Evaluation::executeToken(char op, bool isOperand, std::string &operand) {
     } else if (isOperator(op)) {
 //        dem++;
 //        std::cout << "dem = " << dem << ", op = " << op << std::endl;
-//        std::cout << "getWeight(ops.getSize()) = " << getWeight(ops.getSize()) << ", getWeight(op) = " << getWeight(op) << std::endl;
+//        std::cout << "getWeight(ops.getSize()) = " << getWeight(ops.size()) << ", getWeight(op) = " << getWeight(op) << std::endl;
         while (!ops.empty() && getWeight(ops.peek()) >= getWeight(op)) {
-            if (values.getSize() < 2) {
+            if (values.size() < 2) {
                 result.setException(true, "ERROR: Wrong expression");
                 return result;
             }
@@ -151,11 +152,11 @@ Result Evaluation::executeToken(char op, bool isOperand, std::string &operand) {
 char *Evaluation::getValue(bool isError, std::string &error, int *len) {
     if (isError)
         return stringToCharPointer(error, *len);
-//    std::cout << "getValue  => ops.getSize() = " << ops.getSize() << std::endl;
-//    std::cout << "getValue  => values.getSize() = " << values.getSize() << std::endl;
+//    std::cout << "getValue  => ops.getSize() = " << ops.size() << std::endl;
+//    std::cout << "getValue  => values.getSize() = " << values.size() << std::endl;
 
     while (!ops.empty()) {
-        if (values.getSize() < 2) {
+        if (values.size() < 2) {
             return stringToCharPointer("ERROR: Wrong expression", *len);
         } else {
             double val2 = values.pop();
@@ -167,7 +168,7 @@ char *Evaluation::getValue(bool isError, std::string &error, int *len) {
             values.push(result.getValue());
         }
     }
-    if (values.getSize() != 1) {
+    if (values.size() != 1) {
         return stringToCharPointer("ERROR: Wrong expression", *len);
     }
     return doubleToCharPointer(values.pop(), *len);
