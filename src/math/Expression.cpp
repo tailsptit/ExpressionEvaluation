@@ -17,7 +17,7 @@ std::string Expression::generate(int numExpression) {
         for (int i = 0; i < localNumOperands; i++) {
             int number = nextInt();
             // Generates random operator and append
-            char op = ops[nextInt() % 4];
+            char op = ops[nextIntOperator() % 4];
             if (op == 'x') {
                 op = '*';
             }
