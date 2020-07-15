@@ -114,6 +114,10 @@ public:
         Result res;
         double c;
         if (op < 0) {
+            if (values.size() < 1){
+                res.setException(true, "ERROR: Invalid input string");
+                return res;
+            }
             int left = values.pop();
             switch (-op) {
                 case '+':
@@ -128,6 +132,10 @@ public:
             std::feclearexcept(FE_OVERFLOW);
             std::feclearexcept(FE_UNDERFLOW);
             std::feclearexcept(FE_DIVBYZERO);
+            if (values.size() <2){
+                res.setException(true, "ERROR: Invalid input string");
+                return res;
+            }
             double right = values.pop();
             double left = values.pop();
             switch (op) {

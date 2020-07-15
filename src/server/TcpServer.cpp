@@ -219,9 +219,6 @@ void TcpServer::handleTcpConnection() {
 //    }
 //}
 
-//5.52 => stoi
-//cu = > 5.12
-
 void TcpServer::handleReading(int fd) {
     std::cout << "Reading data from client" << std::endl;
     Message *message = nullptr;
